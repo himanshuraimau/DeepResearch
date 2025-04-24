@@ -180,8 +180,8 @@ ${JSON.stringify(accumulatedSources.map((result) => result.url))}
 
 const deepResearch = async (
     prompt: string,
-    depth: number = 2,
-    breadth: number = 2
+    depth: number = 1,
+    breadth: number = 1
 ): Promise<Research> => {
     if (!accumulatedResearch.query) {
         accumulatedResearch.query = prompt;
