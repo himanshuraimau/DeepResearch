@@ -14,7 +14,10 @@
     "@ai-sdk/openai": "^1.1.13",
     "@ai-sdk/perplexity": "^1.0.1",
     "ai": "^4.1.45",
+    "body-parser": "^2.2.0",
+    "cors": "^2.8.5",
     "exa-js": "^1.4.10",
+    "express": "^5.1.0",
     "zod": "^3.24.2"
   },
   "devDependencies": {

@@ -1,40 +1,28 @@
-# AI Research Assistant
+# DeepResearch
 
-An AI-powered tool to automate web research, analyze data, and generate detailed reports.
+DeepResearch is a web application that performs in-depth research on user queries, generating comprehensive reports based on the findings. The application allows users to configure the depth and breadth of research to control the scope of investigation.
 
 ## Features
 
-- Web search and content extraction
-- AI-based analysis and summarization
-- Markdown report generation
+- Web-based interface for submitting research queries
+- Configurable research depth and breadth
+- Automatic report generation in Markdown format
+- RESTful API for programmatic access
+- CORS-enabled for cross-origin requests
+- Static file serving for frontend assets
 
-### The system works in a recursive pattern where:
+## Prerequisites
 
-- It starts with an initial research query
-- Generates multiple search queries
-- Searches the web for each query
-- Processes and evaluates the results
-- Generates learnings and follow-up questions
-- Recursively explores those questions based on depth parameter
-- Finally consolidates everything into a markdown report
+- Node.js (v14 or higher recommended)
+- pnpm package manager
 
-![image](./public/image.png)
-
-
-## Tech Stack
-
-- TypeScript
-- Node.js
-- pnpm
-- AI SDK
-- Zod, Exa
-
-## Setup
+## Installation
 
 1. Clone the repository:
 
     ```bash
-    git clone <repository_url>
+    git clone <repository-url>
+    cd DeepResearch
     ```
 
 2. Install dependencies:
@@ -43,18 +31,51 @@ An AI-powered tool to automate web research, analyze data, and generate detailed
     pnpm install
     ```
 
-3. Add your API keys in a `.env` file:
+## Project Structure
 
-    ```
-    OPENAI_API_KEY=your_openai_api_key
-    GOOGLE_API_KEY=your_google_api_key
-    EXA_API_KEY=your_exa_api_key
-    ```
+```
+DeepResearch/
+├── src/
+│   ├── index.ts          # Main application entry point
+│   └── DeepResearch.ts   # Core research functionality
+├── frontend/             # Frontend static files
+└── package.json
+```
 
-4. Start the project:
+## Usage
+
+1. Start the server:
 
     ```bash
     pnpm start
     ```
 
-The report will be saved as `report.md`.
+2. Access the application at `http://localhost:3000`
+
+3. Submit research queries through the web interface or API
+
+### API Endpoints
+
+#### POST /api/research
+Submit a research query with optional depth and breadth parameters.
+
+Request body:
+```json
+{
+    "query": "Your research query",
+    "depth": 1,    // Optional, defaults to 1
+    "breadth": 1   // Optional, defaults to 1
+}
+```
+
+Response:
+```json
+{
+    "searchResults": [...],
+    "report": "Generated markdown report"
+}
+```
+
+## Environment Variables
+
+- `PORT`: Server port number (defaults to 3000)
