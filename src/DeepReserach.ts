@@ -6,26 +6,26 @@ import { z } from "zod";
 import Exa from "exa-js";
 import fs from "fs";
 
-type Learning = {
+interface Learning {
     learning: string;
     followUpQuestions: string[];
-};
+}
 
-type SearchResult = {
+interface SearchResult {
     title: string;
     url: string;
     content: string;
-};
+}
 
-type Research = {
-    query: string | undefined;
+interface Research {
+    query: string;
     queries: string[];
     searchResults: SearchResult[];
     learnings: Learning[];
     completedQueries: string[];
-};
+}
 
-const exa = new Exa(process.env.EXA_API_KEY);
+const exa = new Exa(process.env.EXA_API_KEY || '');
 const mainModel = google("gemini-2.0-flash-001");
 
 const SYSTEM_PROMPT = `You are an expert research analyst specializing in providing comprehensive insights. Today is ${new Date().toISOString()}. Follow these guidelines:
@@ -46,14 +46,11 @@ const searchWeb = async (query: string): Promise<SearchResult[]> => {
         livecrawl: "always",
     });
 
-    return results.map(
-        (result) =>
-            ({
-                title: result.title,
-                url: result.url,
-                content: result.text,
-            } as SearchResult)
-    );
+    return results.map(result => ({
+        title: result.title || 'Untitled',
+        url: result.url,
+        content: result.text,
+    }));
 };
 
 const generateSearchQueries = async (query: string, n: number): Promise<string[]> => {
@@ -138,7 +135,10 @@ const searchAndProcess = async (
                 description: "Evaluate the search results",
                 parameters: z.object({}),
                 async execute() {
-                    const pendingResult = pendingSearchResults.pop()!;
+                    const pendingResult = pendingSearchResults.pop();
+                    if (!pendingResult) {
+                        return "No more results to evaluate.";
+                    }
                     const { object: evaluation } = await generateObject({
                         model: mainModel,
                         prompt: `Evaluate whether the search results are relevant and will help answer the following query: ${query}. If the page already exists in the existing results, mark it as irrelevant.
@@ -175,7 +175,6 @@ export async function deepResearch(
     depth: number = 1,
     breadth: number = 1
 ): Promise<Research> {
-    // Reset state for each new input
     const research: Research = {
         query: prompt,
         queries: [],
@@ -183,9 +182,9 @@ export async function deepResearch(
         learnings: [],
         completedQueries: [],
     };
-    // Generate search queries
+    
     research.queries = await generateSearchQueries(prompt, breadth);
-    // For each query, get search results and learnings
+    
     for (const q of research.queries) {
         const results = await searchWeb(q);
         research.searchResults.push(...results);
@@ -194,5 +193,6 @@ export async function deepResearch(
         }
         research.completedQueries.push(q);
     }
+    
     return research;
 }

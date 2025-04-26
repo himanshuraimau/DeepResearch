@@ -1,8 +1,8 @@
-import express, { Request, Response } from 'express';
+import express from 'express';
+import type { Request, Response } from 'express';
 import path from 'path';
 import bodyParser from 'body-parser';
 import cors from 'cors';
-import fs from 'fs';
 import { deepResearch, generateReport } from './DeepReserach';
 
 const app = express();
@@ -12,7 +12,13 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(express.static(frontendPath));
 
-app.post('/api/research', async (req: Request, res: Response) => {
+interface ResearchRequest {
+    query: string;
+    depth?: number;
+    breadth?: number;
+}
+
+app.post('/api/research', async (req: Request<{}, {}, ResearchRequest>, res: Response) => {
     const { query, depth, breadth } = req.body;
     if (!query) {
         console.log('[API] Received research request with missing query');
@@ -25,18 +31,11 @@ app.post('/api/research', async (req: Request, res: Response) => {
         console.log('[API] deepResearch completed. Generating report...');
         const report = await generateReport(research);
         
-        // Save report to file and send response in parallel
-        Promise.all([
-            fs.promises.writeFile('report.md', report),
-            res.json({ searchResults: research.searchResults, report })
-        ]).catch(err => {
-            console.error('[API] Error in parallel operations:', err);
-        });
-        
-        console.log('[API] Report generated and saved as report.md. Response sent.');
-    } catch (err: any) {
+        res.json({ searchResults: research.searchResults, report });
+        console.log('[API] Report generated and response sent.');
+    } catch (err) {
         console.error('[API] Error in /api/research:', err);
-        res.status(500).json({ error: err.message || 'Internal server error' });
+        res.status(500).json({ error: err instanceof Error ? err.message : 'Internal server error' });
     }
 });
 

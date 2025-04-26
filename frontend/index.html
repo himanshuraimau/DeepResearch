@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeepResearch</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <div class="left-pane">
+            <div class="glass-card">
+                <div class="header">
+                    <h1>DeepResearch</h1>
+                    <p class="subtitle">Intelligent Research Assistant</p>
+                </div>
+                <div class="search-box">
+                    <div class="input-group">
+                        <input type="text" id="query" placeholder="Enter your research query...">
+                        <button id="searchBtn" class="primary-btn">Research</button>
+                    </div>
+                    <div class="controls">
+                        <div class="control-group">
+                            <label for="depth">Research Depth</label>
+                            <div class="range-container">
+                                <input type="range" id="depth" min="1" max="5" value="1">
+                                <span id="depthValue">1</span>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label for="breadth">Research Breadth</label>
+                            <div class="range-container">
+                                <input type="range" id="breadth" min="1" max="5" value="1">
+                                <span id="breadthValue">1</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="loading" class="loading hidden">
+                    <div class="spinner"></div>
+                    <p>Conducting Research...</p>
+                </div>
+            </div>
+        </div>
+        <div class="right-pane">
+            <div class="glass-card">
+                <div class="results-header">
+                    <h2>Research Results</h2>
+                    <button id="saveBtn" class="secondary-btn" disabled>Save Results</button>
+                </div>
+                <div id="results" class="hidden">
+                    <div id="report" class="report-content"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html> 
