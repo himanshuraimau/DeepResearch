@@ -8,6 +8,19 @@ An AI-powered tool to automate web research, analyze data, and generate detailed
 - AI-based analysis and summarization
 - Markdown report generation
 
+### The system works in a recursive pattern where:
+
+- It starts with an initial research query
+- Generates multiple search queries
+- Searches the web for each query
+- Processes and evaluates the results
+- Generates learnings and follow-up questions
+- Recursively explores those questions based on depth parameter
+- Finally consolidates everything into a markdown report
+
+![image](./public/image.png)
+
+
 ## Tech Stack
 
 - TypeScript
